@@ -1,0 +1,16 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Form from "../components/form.svelte";
+
+
+const cookie = Astro.cookies.get("token");
+console.log(cookie.value);
+if (cookie.value) {
+  return Astro.redirect("/dashboard");
+}
+---
+
+<BaseLayout>
+  <Form client:load />
+  
+</BaseLayout>

@@ -1,0 +1,16 @@
+---
+const cookie = Astro.cookies.get("token");
+import { getMe } from "../utils/strapi";
+const userdata = await getMe(cookie.value);
+console.log("userdata", userdata);
+if (!cookie.value) {
+  return Astro.redirect("/login");
+
+}
+if (userdata) {
+  //borramos el token de la cookie
+  console.log("no hay usuario", userdata);
+  Astro.cookies.set("token", "", { expires: new Date(0) });
+  return Astro.redirect("/login");
+}
+---

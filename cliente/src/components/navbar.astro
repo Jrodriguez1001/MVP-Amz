@@ -1,0 +1,38 @@
+---
+import { getMe } from ".././utils/strapi.js";
+const cookie = Astro.cookies.get("token");
+const userdata = await getMe(cookie.value);
+let nav;
+
+const isLoggedIn = cookie.value && userdata;
+
+nav = [
+  { name: "Home", href: "/" },
+  ...(isLoggedIn
+    ? [
+        { name: "Dashboard", href: "/dashboard" },
+        { name: "Logout", href: "/logout" },
+      ]
+    : [
+        {
+          name: "Login",
+          href: "/login",
+        },
+      ]),
+];
+---
+<nav>
+  {
+    nav.map((item) => {
+      return (
+        <div>
+          <ul>
+            <li>
+              <a href={item.href}>{item.name}</a>
+            </li>
+          </ul>
+        </div>
+      );
+    })
+  }
+</nav>

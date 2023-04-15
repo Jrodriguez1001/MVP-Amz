@@ -1,0 +1,66 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { getMe } from "../utils/strapi";
+//import Tree from "../components/tree.svelte";
+import Tree from "../components/tree.astro";
+const cookie = Astro.cookies.get("token");
+
+// If the user is not logged in, redirect them to the login page
+
+if (!cookie.value) {
+  return Astro.redirect("/login");
+}
+
+// If the user is logged in, fetch their data from Strapi
+
+const userdata = await getMe(cookie.value);
+let tree = userdata.referal_trees;
+if (!tree) {
+    tree = [{'username':'No hay referidos'}]};
+        
+    console.log("tree", tree);
+if (!userdata) {
+  //borramos el token de la cookie
+  console.log("no hay usuario", userdata);
+  Astro.cookies.set("token", "", { expires: new Date(0) });
+  return Astro.redirect("/login");
+}
+---
+
+<BaseLayout>
+  <p>Mi usuario: {userdata.username}</p>
+  <p>email: {userdata.email}</p>
+  <div class="referidos">
+    <div class="info-ref">    <p>Mis red de referidos</p> <span>Total: {tree.length}</span>
+    </div>
+  
+  {
+    tree.map((referal) => (
+      <div>
+        <ul>
+          <li>{referal.username}</li>
+        </ul>
+      </div>
+    ))
+  }
+</div>
+<Tree username={userdata.username} referidos={tree} />
+</BaseLayout>
+
+<style>
+  .referidos{
+    display: flex;
+    flex-direction: column;
+    border: 1px solid black;
+    width: 200px;
+    padding: 10px;
+  
+  }
+  .info-ref {
+    width: 200px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+</style>
+

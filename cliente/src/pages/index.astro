@@ -1,0 +1,13 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+//traemos la info de negociodepepe.com
+const res = await fetch("https://negociodepepe.online/");
+const html = await res.text();
+console.log(html);
+//return Astro.redirect("/login");
+---
+
+<BaseLayout>
+  <h1>hola</h1>
+  <p>{html}</p>
+</BaseLayout>
